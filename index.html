@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsyConnect - Plataforma de Saúde Mental</title>
+    <style>
+        :root {
+            --bg-light: #FAFAFA;
+            --brand-pink: #F472B6;
+            --brand-pink-soft: #FDF2F8;
+            --brand-blue: #0ea5e9;
+            --brand-blue-soft: #f0f9ff;
+            --dark-slate: #0F172A;
+            --muted-gray: #64748B;
+            --border-color: #0F172A;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            /* Retícula suave e limpa */
+            background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1.2px, transparent 1.2px);
+            background-size: 20px 20px;
+            color: var(--dark-slate);
+            padding-bottom: 60px;
+        }
+
+        /* HEADER / NAVBAR */
+        header {
+            background: #FFFFFF;
+            border-bottom: 2px solid var(--border-color);
+            padding: 14px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            height: 48px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            box-shadow: 2px 2px 0px var(--border-color);
+        }
+
+        nav {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--muted-gray);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--dark-slate);
+            background: rgba(0,0,0,0.04);
+        }
+
+        /* BOTAO LOGIN */
+        .btn-header-login {
+            background: #FFFFFF;
+            color: var(--dark-slate);
+            border: 2px solid var(--border-color);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 2.5px 2.5px 0px var(--border-color);
+            transition: all 0.15s;
+        }
+
+        .btn-header-login:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--border-color);
+            background: var(--brand-pink-soft);
+        }
+
+        .user-logged-badge {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: var(--brand-pink-soft);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            box-shadow: 2px 2px 0px var(--border-color);
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        /* CONTAINER PRINCIPAL */
+        .container {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* HERO CLEAN */
+        .hero {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 5px 5px 0px var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: var(--muted-gray);
+            font-size: 1rem;
+        }
+
+        .badge-clean {
+            display: inline-block;
+            background: var(--brand-pink);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+
+        /* FILTROS */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--border-color);
+            transition: all 0.15s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--dark-slate);
+            color: white;
+        }
+
+        /* GRID DE CARDS */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 4px 4px 0px var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .doc-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            object-fit: cover;
+        }
+
+        .doc-info h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .doc-crp {
+            font-size: 0.78rem;
+            color: var(--muted-gray);
+            font-weight: 600;
+        }
+
+        .tag-specialty {
+            background: var(--brand-pink-soft);
+            color: var(--dark-slate);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .card-body {
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.45;
+            margin-bottom: 16px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #E2E8F0;
+            padding-top: 14px;
+        }
+
+        .price {
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .btn-action {
+            background: var(--brand-pink);
+            color: white;
+            border: 2px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--border-color);
+            transition: all 0.15s;
+        }
+
+        .btn-action:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3.5px 3.5px 0px var(--border-color);
+        }
+
+        /* PAINEL DO DOUTOR (OCULTO POR PADRAO) */
+        .doctor-dashboard {
+            display: none;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 4px 4px 0px var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .doctor-dashboard h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .patient-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .patient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-light);
+        }
+
+        /* MODAL DE LOGIN */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(3px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border: 2.5px solid var(--border-color);
+            border-radius: 18px;
+            padding: 28px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 6px 6px 0px var(--border-color);
+            animation: fadeIn 0.15s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--muted-gray);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--dark-slate);
+            border-bottom-color: var(--brand-pink);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--dark-slate);
+            color: white;
+            border: 2px solid var(--border-color);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--brand-pink);
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--brand-pink);
+        }
+
+        /* CHAT CLEAN */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 4px 4px 0px var(--border-color);
+            overflow: hidden;
+            z-index: 500;
+        }
+
+        .chat-header {
+            background: var(--dark-slate);
+            color: white;
+            padding: 10px 14px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chat-body {
+            height: 150px;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: #FAFAFA;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .msg.received { background: white; align-self: flex-start; }
+        .msg.sent { background: var(--brand-pink-soft); align-self: flex-end; }
+
+        .chat-input {
+            display: flex;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: none;
+            padding: 8px;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: var(--brand-pink);
+            color: white;
+            border: none;
+            border-left: 2px solid var(--border-color);
+            padding: 0 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <div class="logo-container" onclick="resetView()">
+            <img src="1000060652.jpg" alt="PsyConnect Logo" class="logo-img">
+        </div>
+
+        <nav>
+            <a href="#" class="nav-link active" onclick="resetView()">Explorar</a>
+            <a href="#" class="nav-link" id="navAgendaLink" onclick="showUserRoleToast()">Minha Agenda</a>
+        </nav>
+
+        <div>
+            <button class="btn-header-login" id="btnLoginNav" onclick="openLoginModal()">Entrar / Cadastrar</button>
+            
+            <div class="user-logged-badge" id="userLoggedBadge">
+                <span id="userLoggedName">👤 Paciente</span>
+                <small style="cursor: pointer; color: #ef4444; font-weight: 800;" onclick="logout()">[Sair]</small>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="container">
+        
+        <!-- HERO CLEAN -->
+        <section class="hero" id="heroBanner">
+            <div>
+                <span class="badge-clean">Plataforma Verificada</span>
+                <h1>Cuidado psicológico simples e acessível.</h1>
+                <p>Agende consultas com profissionais especializados de forma prática.</p>
+            </div>
+        </section>
+
+        <!-- PAINEL EXCLUSIVO DO DOUTOR (Exibido ao logar como Doutor) -->
+        <div class="doctor-dashboard" id="doctorDashboard">
+            <h2>🩺 Painel do Profissional (Dr. Roberto)</h2>
+            <p style="color: var(--muted-gray); margin-bottom: 15px; font-size: 0.9rem;">Próximas consultas agendadas para hoje:</p>
+            <ul class="patient-list">
+                <li class="patient-item">
+                    <div>
+                        <strong>Ana Paula Silva</strong> <br>
+                        <small style="color: var(--muted-gray);">Consulta Online - Primeira Sessão</small>
+                    </div>
+                    <span style="background: #dcfce7; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-weight: 700; font-size: 0.8rem;">14:30 H</span>
+                </li>
+                <li class="patient-item">
+                    <div>
+                        <strong>Carlos Eduardo M.</strong> <br>
+                        <small style="color: var(--muted-gray);">Retorno - TCC</small>
+                    </div>
+                    <span style="background: #dcfce7; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-weight: 700; font-size: 0.8rem;">16:00 H</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="filters" id="filterSection">
+            <button class="filter-btn active" onclick="filterCards('todos', this)">Todos</button>
+            <button class="filter-btn" onclick="filterCards('Ansiedade', this)">Ansiedade</button>
+            <button class="filter-btn" onclick="filterCards('TCC', this)">TCC</button>
+            <button class="filter-btn" onclick="filterCards('Depressão', this)">Depressão</button>
+        </div>
+
+        <!-- LISTA DE PROFISSIONAIS (CARDS) -->
+        <div class="grid" id="psychologistsGrid">
+            
+            <!-- Card 1 -->
+            <div class="card" data-category="Ansiedade TCC">
+                <div>
+                    <div class="card-header">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150" class="doc-avatar" alt="Dra. Mariana">
+                        <div class="doc-info">
+                            <h3>Dra. Mariana Costa</h3>
+                            <span class="doc-crp">CRP 06/142859</span><br>
+                            <span class="tag-specialty">Ansiedade & TCC</span>
+                        </div>
+                    </div>
+                    <p class="card-body">Especialista em gestão de estresse, ansiedade e terapia cognitivo-comportamental com 8 anos de experiência.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">R$ 150 <small style="font-size:0.75rem; color:#666;">/sessão</small></span>
+                    <button class="btn-action" onclick="openBookingModal('Dra. Mariana Costa')">Agendar</button>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card" data-category="Depressão">
+                <div>
+                    <div class="card-header">
+                        <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=150" class="doc-avatar" alt="Dr. Roberto">
+                        <div class="doc-info">
+                            <h3>Dr. Roberto Alves</h3>
+                            <span class="doc-crp">CRP 06/982140</span><br>
+                            <span class="tag-specialty">Depressão</span>
+                        </div>
+                    </div>
+                    <p class="card-body">Acompanhamento focado em reconstrução emocional, luto e episódios depressivos.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">R$ 180 <small style="font-size:0.75rem; color:#666;">/sessão</small></span>
+                    <button class="btn-action" onclick="openBookingModal('Dr. Roberto Alves')">Agendar</button>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card" data-category="Ansiedade">
+                <div>
+                    <div class="card-header">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150" class="doc-avatar" alt="Dra. Juliana">
+                        <div class="doc-info">
+                            <h3>Dra. Juliana Mendes</h3>
+                            <span class="doc-crp">CRP 06/204112</span><br>
+                            <span class="tag-specialty">Ansiedade</span>
+                        </div>
+                    </div>
+                    <p class="card-body">Foco em jovens adultos, desenvolvimento pessoal e inteligência emocional.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="price">R$ 140 <small style="font-size:0.75rem; color:#666;">/sessão</small></span>
+                    <button class="btn-action" onclick="openBookingModal('Dra. Juliana Mendes')">Agendar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL DE LOGIN (PACIENTE / DOUTOR) -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <div class="modal-tabs">
+                <button class="tab-btn active" id="tabPaciente" onclick="switchLoginTab('paciente')">Sou Paciente</button>
+                <button class="tab-btn" id="tabDoutor" onclick="switchLoginTab('doutor')">Sou Doutor(a)</button>
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label id="lblEmail">E-mail do Paciente</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="btnSubmitLogin">Entrar como Paciente</button>
+            </form>
+            
+            <p style="font-size: 0.75rem; color: var(--muted-gray); margin-top: 15px; text-align: center; cursor: pointer;" onclick="closeLoginModal()">Cancelar</p>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO DE AGENDAMENTO -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal" style="text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">✨</div>
+            <h3 style="margin-bottom: 8px;">Confirmar Agendamento</h3>
+            <p id="bookingText" style="font-size: 0.88rem; color: var(--muted-gray); margin-bottom: 20px;">Deseja reservar sua sessão para o próximo horário disponível?</p>
+            <button class="btn-submit" onclick="confirmBooking()">Confirmar Reserva</button>
+            <p style="font-size: 0.75rem; color: var(--muted-gray); margin-top: 12px; cursor: pointer;" onclick="closeBookingModal()">Voltar</p>
+        </div>
+    </div>
+
+    <!-- CHAT SIMULADO -->
+    <div class="chat-widget">
+        <div class="chat-header">
+            <span>💬 Suporte PsyConnect</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="msg received">Olá! Precisa de ajuda com a plataforma?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Digite..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DAS INTERAÇÕES -->
+    <script>
+        let currentRole = 'paciente'; // 'paciente' ou 'doutor'
+        let loggedUser = null;
+
+        // Controle do Modal de Login
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function switchLoginTab(role) {
+            currentRole = role;
+            const tabP = document.getElementById('tabPaciente');
+            const tabD = document.getElementById('tabDoutor');
+            const lblEmail = document.getElementById('lblEmail');
+            const btnSubmit = document.getElementById('btnSubmitLogin');
+
+            if (role === 'paciente') {
+                tabP.classList.add('active');
+                tabD.classList.remove('active');
+                lblEmail.innerText = 'E-mail do Paciente';
+                btnSubmit.innerText = 'Entrar como Paciente';
+                document.getElementById('loginEmail').value = 'ana.paula@email.com';
+            } else {
+                tabD.classList.add('active');
+                tabP.classList.remove('active');
+                lblEmail.innerText = 'E-mail Profissional (CRP)';
+                btnSubmit.innerText = 'Entrar no Painel Médico';
+                document.getElementById('loginEmail').value = 'dr.roberto@psyconnect.com';
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            closeLoginModal();
+
+            const btnLoginNav = document.getElementById('btnLoginNav');
+            const userBadge = document.getElementById('userLoggedBadge');
+            const userName = document.getElementById('userLoggedName');
+            const docDashboard = document.getElementById('doctorDashboard');
+            const heroBanner = document.getElementById('heroBanner');
+            const psychologistsGrid = document.getElementById('psychologistsGrid');
+            const filterSection = document.getElementById('filterSection');
+
+            btnLoginNav.style.display = 'none';
+            userBadge.style.display = 'flex';
+
+            if (currentRole === 'paciente') {
+                loggedUser = 'Ana Paula';
+                userName.innerText = '👤 Ana Paula (Paciente)';
+                docDashboard.style.display = 'none';
+                psychologistsGrid.style.display = 'grid';
+                filterSection.style.display = 'flex';
+                heroBanner.style.display = 'flex';
+            } else {
+                loggedUser = 'Dr. Roberto';
+                userName.innerText = '🩺 Dr. Roberto (CRP 06/98214)';
+                docDashboard.style.display = 'block';
+                psychologistsGrid.style.display = 'none';
+                filterSection.style.display = 'none';
+                heroBanner.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            loggedUser = null;
+            document.getElementById('btnLoginNav').style.display = 'block';
+            document.getElementById('userLoggedBadge').style.display = 'none';
+            resetView();
+        }
+
+        function resetView() {
+            document.getElementById('doctorDashboard').style.display = 'none';
+            document.getElementById('psychologistsGrid').style.display = 'grid';
+            document.getElementById('filterSection').style.display = 'flex';
+            document.getElementById('heroBanner').style.display = 'flex';
+        }
+
+        // Agendamento
+        function openBookingModal(docName) {
+            document.getElementById('bookingText').innerText = `Deseja agendar sua sessão com ${docName}?`;
+            document.getElementById('bookingModal').style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+
+        function confirmBooking() {
+            closeBookingModal();
+            alert('✅ Consulta reservada com sucesso! Um e-mail de confirmação foi enviado.');
+        }
+
+        // Filtros
+        function filterCards(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.card').forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                card.style.display = (cat === 'todos' || cardCat.includes(cat)) ? 'flex' : 'none';
+            });
+        }
+
+        // Chat
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const chatBody = document.getElementById('chatBody');
+            if (!input.value.trim()) return;
+
+            const userMsg = document.createElement('div');
+            userMsg.className = 'msg sent';
+            userMsg.innerText = input.value;
+            chatBody.appendChild(userMsg);
+            input.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'msg received';
+                botMsg.innerText = 'Atendimento conectado. Como podemos te ajudar?';
+                chatBody.appendChild(botMsg);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 700);
+        }
+
+        function showUserRoleToast() {
+            if (!loggedUser) {
+                openLoginModal();
+            } else {
+                alert(`Você está logado como ${loggedUser}. Exibindo agenda correspondente.`);
+            }
+        }
+    </script>
+</body>
+</html>
